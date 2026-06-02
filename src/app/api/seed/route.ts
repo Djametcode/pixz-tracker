@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
     const { db } = await connectToDatabase();
     
     // Create user if not exists
-    const existingUser = await db.collection('users').findOne({ username: 'djamet' });
+    const existingUser = await db.collection('users').findOne({ username: process.env.AUTH_USERNAME || 'admin' });
     if (!existingUser) {
-      const passwordHash = await hashPassword('Aerdrop123!');
+      const passwordHash = await hashPassword(process.env.AUTH_PASSWORD || '');
       await db.collection('users').insertOne({
-        username: 'djamet',
+        username: process.env.AUTH_USERNAME || 'admin',
         passwordHash,
         role: 'admin',
         createdAt: new Date(),

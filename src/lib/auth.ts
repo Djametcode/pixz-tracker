@@ -2,7 +2,8 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
+const JWT_SECRET = process.env.JWT_SECRET!;
+if (!JWT_SECRET) throw new Error('JWT_SECRET env var is required');
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);

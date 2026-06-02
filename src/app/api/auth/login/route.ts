@@ -14,10 +14,10 @@ export async function POST(req: NextRequest) {
     
     // Auto-create admin user if not exists
     let user = await db.collection('users').findOne({ username });
-    if (!user && username === 'djamet') {
-      const passwordHash = await hashPassword('Aerdrop123!');
+    if (!user && username === process.env.AUTH_USERNAME) {
+      const passwordHash = await hashPassword(process.env.AUTH_PASSWORD || '');
       const result = await db.collection('users').insertOne({
-        username: 'djamet',
+        username: process.env.AUTH_USERNAME || 'admin',
         passwordHash,
         role: 'admin',
         createdAt: new Date(),
