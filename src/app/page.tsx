@@ -260,12 +260,12 @@ export default function Dashboard() {
                   {upcomingMints.map((m, i) => (
                     <a key={i} href={m.twitter || '#'} target="_blank" rel="noopener noreferrer" className="card-hover p-5 cursor-pointer group" style={{ minWidth: 300, flex: '0 0 300px' }}>
                       <div className="flex items-center gap-4 mb-4">
-                        <img alt={m.name} className="w-14 h-14 rounded-2xl object-cover border-2 shrink-0" src={m.image} style={{ borderColor: 'var(--accent)', boxShadow: 'rgba(99, 102, 241, 0.15) 0px 0px 20px' }} />
+                        <img alt={m.name} className="w-14 h-14 rounded-2xl object-cover border-2 border-indigo-500/30 shrink-0" src={m.image} />
                         <div className="flex-1 min-w-0">
-                          <div className="font-bold text-base truncate" style={{ color: 'var(--text-primary)' }}>{m.name}</div>
+                          <div className="font-bold text-base truncate text-slate-100">{m.name}</div>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="badge-info text-xs">{m.chain}</span>
-                            <span className="text-xs font-medium" style={{ color: 'var(--accent)' }}>{m.price}</span>
+                            <span className="text-xs font-medium text-indigo-400">{m.price}</span>
                           </div>
                         </div>
                       </div>
