@@ -84,7 +84,7 @@ function useTheme() {
     if (saved === "light") setDark(false);
   }, []);
   useEffect(() => {
-    document.documentElement.classList.toggle("light", !dark);
+    document.documentElement.classList.toggle("dark", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
   return { dark, toggle: () => setDark((d) => !d) };
@@ -234,8 +234,8 @@ export default function Dashboard() {
                 : <HeroIcon path={ICONS.moon[0]} className="w-5 h-5 text-slate-600" />
               }
             </button>
-            <button onClick={handleLogout} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors text-xs text-gray-500 dark:text-slate-400">
-              <HeroIcon path={ICONS.arrowPath[0]} className="w-5 h-5" />
+            <button onClick={handleLogout} className="btn-ghost text-xs px-3 py-2">
+              Logout
             </button>
           </div>
         </div>
