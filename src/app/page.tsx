@@ -28,6 +28,16 @@ interface Stats {
   submitted: number;
   active_campaigns: number;
   last_updated: string;
+  upcoming_mints: number;
+}
+
+interface UpcomingMint {
+  name: string;
+  chain: string;
+  price: string;
+  date: string;
+  image: string;
+  twitter: string;
 }
 
 function computeStats(projects: Project[]): Stats {
@@ -85,6 +95,7 @@ function SourceBadge({ source }: { source: string }) {
 
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [upcomingMints, setUpcomingMints] = useState<UpcomingMint[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [filter, setFilter] = useState("all");
@@ -102,6 +113,7 @@ export default function Dashboard() {
       const loadedProjects = data.projects || [];
       setProjects(loadedProjects);
       setStats(computeStats(loadedProjects));
+      setUpcomingMints(data.upcoming_mints || []);
     } catch {
       router.push("/login");
     } finally {
@@ -236,6 +248,35 @@ export default function Dashboard() {
                 <div className="stat-label">Waitlist</div>
               </div>
             </div>
+            {/* Upcoming Mints */}
+            {upcomingMints.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold text-slate-100">Upcoming Mints</h2>
+                  <span className="badge-info">{upcomingMints.length} projects</span>
+                </div>
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                  {upcomingMints.map((m, i) => (
+                    <a key={i} href={m.twitter || '#'} target="_blank" rel="noopener noreferrer" className="card-hover p-5 cursor-pointer group" style={{ minWidth: 300, flex: '0 0 300px' }}>
+                      <div className="flex items-center gap-4 mb-4">
+                        <img alt={m.name} className="w-14 h-14 rounded-2xl object-cover border-2 shrink-0" src={m.image} style={{ borderColor: 'var(--accent)', boxShadow: 'rgba(99, 102, 241, 0.15) 0px 0px 20px' }} />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-base truncate" style={{ color: 'var(--text-primary)' }}>{m.name}</div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="badge-info text-xs">{m.chain}</span>
+                            <span className="text-xs font-medium" style={{ color: 'var(--accent)' }}>{m.price}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-slate-500">
+                        <span>Mint: {m.date}</span>
+                        <span className="text-indigo-400 group-hover:underline">tap for details →</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Source breakdown */}
             <div className="grid grid-cols-2 gap-4">

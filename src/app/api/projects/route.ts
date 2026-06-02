@@ -12,8 +12,9 @@ export async function GET(req: NextRequest) {
     const { db } = await connectToDatabase();
     const projects = await db.collection('projects').find({}).sort({ date: -1 }).toArray();
     const stats = await db.collection('stats').findOne({}) || {};
+    const upcoming_mints = await db.collection('upcoming_mints').find({}).sort({ date: 1 }).toArray();
     
-    return NextResponse.json({ projects, stats });
+    return NextResponse.json({ projects, stats, upcoming_mints });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
