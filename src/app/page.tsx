@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ChatWidget from "@/components/ChatWidget";
+import TerminalWidget from "@/components/TerminalWidget";
 import SwipeCard from "@/components/SwipeCard";
 
 /* ── Types ── */
@@ -455,6 +457,9 @@ export default function Dashboard() {
           })}
         </div>
       </nav>
+      {/* Chat Widget */}
+      <ChatWidget />
+      <TerminalWidget />
     </div>
   );
 }
