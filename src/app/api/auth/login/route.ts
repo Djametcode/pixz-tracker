@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import { verifyPassword, signToken } from '@/lib/auth';
+import { verifyPassword, signToken, hashPassword } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,19 @@ export async function POST(req: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const user = await db.collection('users').findOne({ username });
+    
+    // Auto-create admin user if not exists
+    let user = await db.collection('users').findOne({ username });
+    if (!user && username === 'djamet') {
+      const passwordHash = await hashPassword('Aerdrop123!');
+      const result = await db.collection('users').insertOne({
+        username: 'djamet',
+        passwordHash,
+        role: 'admin',
+        createdAt: new Date(),
+      });
+      user = await db.collection('users').findOne({ _id: result.insertedId });
+    }
 
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
@@ -29,7 +41,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60,
       path: '/',
     });
 
