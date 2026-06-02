@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import SwipeCard from "@/components/SwipeCard";
 
 /* ── Types ── */
 interface Project {
@@ -180,6 +181,10 @@ export default function Dashboard() {
     router.push("/login");
   };
 
+  const handleDeleteProject = (projectName: string) => {
+    setProjects((prev) => prev.filter((p) => p.project !== projectName));
+  };
+
   const filtered = projects.filter((p) => {
     if (filter !== "all" && p.type !== filter) return false;
     if (search && !p.project.toLowerCase().includes(search.toLowerCase())) return false;
@@ -321,7 +326,8 @@ export default function Dashboard() {
               <h3 className="text-sm font-semibold mb-3">Recent Activity</h3>
               <div className="space-y-2">
                 {projects.slice(0, 10).map((p, i) => (
-                  <a key={i} href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                  <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
                     <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
                       <TypeIcon type={p.type} />
                     </div>
@@ -335,6 +341,7 @@ export default function Dashboard() {
                     </div>
                     <StatusBadge status={p.status} />
                   </a>
+                  </SwipeCard>
                 ))}
               </div>
             </div>
@@ -360,7 +367,8 @@ export default function Dashboard() {
             {/* List */}
             <div className="space-y-2">
               {filtered.map((p, i) => (
-                <a key={i} href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
                   <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
                     <TypeIcon type={p.type} />
                   </div>
@@ -377,6 +385,7 @@ export default function Dashboard() {
                     <span className="text-xs text-gray-400 dark:text-slate-500">{p.date}</span>
                   </div>
                 </a>
+                </SwipeCard>
               ))}
               {filtered.length === 0 && (
                 <div className="text-center py-12 text-gray-400 dark:text-slate-500">
@@ -393,7 +402,8 @@ export default function Dashboard() {
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">🎫 Whitelist Pipeline</h3>
             {projects.filter((p) => p.type.includes("whitelist") || p.type.includes("kol")).map((p, i) => (
-              <a key={i} href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+              <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+              <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
                 <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                   <HeroIconMulti paths={ICONS.ticket} className="w-4 h-4 text-indigo-500" />
                 </div>
@@ -403,6 +413,7 @@ export default function Dashboard() {
                 </div>
                 <StatusBadge status={p.status} />
               </a>
+              </SwipeCard>
             ))}
           </div>
         )}
@@ -412,7 +423,8 @@ export default function Dashboard() {
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">🧪 Testnet Campaigns</h3>
             {projects.filter((p) => p.type === "testnet" || p.type === "quest").map((p, i) => (
-              <a key={i} href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+              <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+              <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
                 <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
                   <HeroIconMulti paths={ICONS.flask} className="w-4 h-4 text-amber-500" />
                 </div>
@@ -422,6 +434,7 @@ export default function Dashboard() {
                 </div>
                 <StatusBadge status={p.status} />
               </a>
+              </SwipeCard>
             ))}
           </div>
         )}
