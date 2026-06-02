@@ -52,6 +52,7 @@ function computeStats(projects: Project[]): Stats {
     submitted: projects.filter(p => ["submitted", "success", "replied", "completed"].includes(p.status)).length,
     active_campaigns: projects.filter(p => !["completed", "dropped", "expired", "failed", "missed"].includes(p.status)).length,
     last_updated: new Date().toISOString(),
+    upcoming_mints: 0,
   };
 }
 
