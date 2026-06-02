@@ -14,6 +14,7 @@ interface Project {
   mint_date: string;
   mint_price: string;
   notes: string;
+  url: string;
 }
 
 interface Stats {
@@ -276,12 +277,12 @@ export default function Dashboard() {
               <h2 className="text-lg font-bold text-slate-100 mb-4">Recent Projects</h2>
               <div className="grid gap-3">
                 {projects.slice(0, 8).map((p, i) => (
-                  <div key={i} className="card-hover p-4 flex items-center gap-4">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800">
+                  <a key={i} href={p.url || '#'} target="_blank" rel="noopener noreferrer" className="card-hover p-4 flex items-center gap-4 cursor-pointer group">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800 group-hover:bg-indigo-600/10 transition-colors">
                       <TypeIcon type={p.type} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-slate-100 truncate">{p.project}</div>
+                      <div className="font-semibold text-slate-100 truncate group-hover:text-indigo-400 transition-colors">{p.project}</div>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="badge-gray text-[10px]">{p.type}</span>
                         <span className="text-xs text-slate-500">·</span>
@@ -291,8 +292,13 @@ export default function Dashboard() {
                     <div className="hidden sm:flex items-center gap-3">
                       <SourceBadge source={p.source} />
                       <StatusBadge status={p.status} />
+                      {p.url && (
+                        <svg className="w-4 h-4 text-slate-600 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      )}
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
@@ -338,13 +344,13 @@ export default function Dashboard() {
             {/* Project cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((p, i) => (
-                <div key={i} className="card-hover p-5 flex flex-col">
+                <a key={i} href={p.url || '#'} target="_blank" rel="noopener noreferrer" className="card-hover p-5 flex flex-col cursor-pointer group">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800 group-hover:bg-indigo-600/10 transition-colors">
                       <TypeIcon type={p.type} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-slate-100 truncate">{p.project}</h3>
+                      <h3 className="font-bold text-slate-100 truncate group-hover:text-indigo-400 transition-colors">{p.project}</h3>
                       <span className="badge-gray text-[10px] mt-1">{p.type}</span>
                     </div>
                     <StatusBadge status={p.status} />
@@ -369,10 +375,15 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-auto pt-3 border-t border-slate-800">
+                  <div className="mt-auto pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                     <p className="text-xs text-slate-500 line-clamp-2">{p.notes}</p>
+                    {p.url && (
+                      <svg className="w-4 h-4 text-slate-600 group-hover:text-indigo-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    )}
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 
@@ -402,11 +413,16 @@ export default function Dashboard() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/50">
                   {projects.filter(p => p.type.includes("whitelist") || p.type.includes("kol")).map((p, i) => (
-                    <tr key={i} className="hover:bg-slate-800/30 transition-colors">
+                    <tr key={i} className="hover:bg-slate-800/30 transition-colors cursor-pointer" onClick={() => p.url && window.open(p.url, '_blank')}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <TypeIcon type={p.type} />
-                          <span className="font-semibold text-slate-100">{p.project}</span>
+                          <span className="font-semibold text-slate-100 hover:text-indigo-400 transition-colors">{p.project}</span>
+                          {p.url && (
+                            <svg className="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3"><span className="badge-gray">{p.type}</span></td>
@@ -430,13 +446,13 @@ export default function Dashboard() {
             <h2 className="text-lg font-bold text-slate-100 mb-4">🧪 Testnet Campaigns</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {projects.filter(p => p.type === "testnet" || p.type === "quest").map((p, i) => (
-                <div key={i} className="card-hover p-5">
+                <a key={i} href={p.url || '#'} target="_blank" rel="noopener noreferrer" className="card-hover p-5 cursor-pointer group">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-600/10">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-600/10 group-hover:bg-indigo-600/10 transition-colors">
                         <TypeIcon type={p.type} />
                       </div>
-                      <h3 className="font-bold text-slate-100">{p.project}</h3>
+                      <h3 className="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">{p.project}</h3>
                     </div>
                     <span className="badge-purple">{p.chain}</span>
                   </div>
@@ -445,7 +461,7 @@ export default function Dashboard() {
                     <SourceBadge source={p.source} />
                   </div>
                   <p className="text-xs text-slate-500 border-t border-slate-800 pt-3 mt-3">{p.notes}</p>
-                </div>
+                </a>
               ))}
             </div>
           </div>
