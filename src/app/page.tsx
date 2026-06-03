@@ -44,6 +44,34 @@ interface UpcomingMint {
   twitter: string;
 }
 
+interface CronJob {
+  job_id: string;
+  name: string;
+  schedule: string | { kind: string; expr?: string; display?: string; minutes?: number };
+  enabled: boolean;
+  state: string;
+  last_status: string;
+  last_run_at: string;
+  next_run_at: string;
+  deliver: string;
+  skills: string[];
+  no_agent: boolean;
+  script: string;
+}
+
+interface VpsInfo {
+  name: string;
+  ip: string;
+  status: 'online' | 'offline' | 'warning';
+  cpu: number;
+  ram: { used: number; total: number; percent: number };
+  disk: { used: number; total: number; percent: number };
+  uptime: string;
+  gpu?: { name: string; util: number; mem: { used: number; total: number }; temp: number };
+  services: { name: string; status: string }[];
+  miners?: { name: string; hashrate: string; status: string }[];
+}
+
 /* ── Heroicons Solid (24x24, viewBox 0 0 24 24, fill currentColor) ── */
 function HeroIcon({ path, className }: { path: string; className?: string }) {
   return (
@@ -152,6 +180,8 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [upcomingMints, setUpcomingMints] = useState<UpcomingMint[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [cronJobs, setCronJobs] = useState<CronJob[]>([]);
+  const [vpsList, setVpsList] = useState<VpsInfo[]>([]);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
@@ -178,6 +208,29 @@ export default function Dashboard() {
     }
   };
 
+  const fetchCronJobs = async () => {
+    try {
+      const res = await fetch("/api/cron");
+      if (res.ok) {
+        const data = await res.json();
+        setCronJobs(data.jobs || []);
+      }
+    } catch {}
+  };
+
+  const fetchVpsData = async () => {
+    try {
+      const res = await fetch("/api/vps");
+      if (res.ok) {
+        const data = await res.json();
+        setVpsList(data.vps || []);
+      }
+    } catch {}
+  };
+
+  useEffect(() => { if (activeTab === "cron") fetchCronJobs(); }, [activeTab]);
+  useEffect(() => { if (activeTab === "vps") fetchVpsData(); }, [activeTab]);
+
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
@@ -198,6 +251,8 @@ export default function Dashboard() {
     { id: "projects", icon: ICONS.folder, label: "Projects" },
     { id: "whitelist", icon: ICONS.ticket, label: "Whitelist" },
     { id: "testnets", icon: ICONS.flask, label: "Testnets" },
+    { id: "vps", icon: ICONS.bolt, label: "VPS" },
+    { id: "cron", icon: ICONS.arrowPath, label: "Cron" },
   ];
 
   const filterTabs = [
@@ -440,11 +495,196 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+
+        {/* VPS Tab */}
+        {activeTab === "vps" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold">⚡ VPS / GPU</h3>
+              <button onClick={fetchVpsData} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Refresh</button>
+            </div>
+
+            {vpsList.length === 0 ? (
+              <div className="text-center py-12 text-gray-400 dark:text-slate-500">
+                <HeroIconMulti paths={ICONS.bolt} className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                <p className="text-sm">No VPS data</p>
+                <p className="text-xs mt-1">Add VPS info via /api/vps</p>
+              </div>
+            ) : (
+              vpsList.map((vps, i) => (
+                <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200 dark:border-slate-800 space-y-3">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2.5 h-2.5 rounded-full ${vps.status === 'online' ? 'bg-emerald-500 animate-pulse' : vps.status === 'warning' ? 'bg-amber-500' : 'bg-red-500'}`} />
+                      <span className="font-semibold text-sm">{vps.name}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-gray-400 dark:text-slate-500">{vps.ip}</span>
+                  </div>
+
+                  {/* Resource Bars */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">CPU</div>
+                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${vps.cpu > 80 ? 'bg-red-500' : vps.cpu > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.cpu}%` }} />
+                      </div>
+                      <div className="text-[10px] font-medium mt-0.5">{vps.cpu}%</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">RAM</div>
+                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${vps.ram.percent > 80 ? 'bg-red-500' : vps.ram.percent > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.ram.percent}%` }} />
+                      </div>
+                      <div className="text-[10px] font-medium mt-0.5">{vps.ram.used}/{vps.ram.total}GB</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">Disk</div>
+                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${vps.disk.percent > 80 ? 'bg-red-500' : vps.disk.percent > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.disk.percent}%` }} />
+                      </div>
+                      <div className="text-[10px] font-medium mt-0.5">{vps.disk.used}/{vps.disk.total}GB</div>
+                    </div>
+                  </div>
+
+                  {/* Uptime */}
+                  <div className="flex items-center gap-2 text-[10px] text-gray-400 dark:text-slate-500">
+                    <span>Uptime: {vps.uptime}</span>
+                  </div>
+
+                  {/* GPU */}
+                  {vps.gpu && (
+                    <div className="bg-indigo-500/5 dark:bg-indigo-500/10 rounded-xl p-3 border border-indigo-500/20">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">🎮 {vps.gpu.name}</span>
+                        <span className="text-[10px] text-indigo-500">{vps.gpu.temp}°C</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <div className="text-[10px] text-gray-500 dark:text-slate-400">Util</div>
+                          <div className="h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${vps.gpu.util}%` }} />
+                          </div>
+                          <div className="text-[10px] font-medium">{vps.gpu.util}%</div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-gray-500 dark:text-slate-400">VRAM</div>
+                          <div className="h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${(vps.gpu.mem.used / vps.gpu.mem.total) * 100}%` }} />
+                          </div>
+                          <div className="text-[10px] font-medium">{vps.gpu.mem.used}/{vps.gpu.mem.total}MB</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Services */}
+                  {vps.services.length > 0 && (
+                    <div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1.5">Services</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {vps.services.map((s, j) => (
+                          <span key={j} className={`text-[9px] px-2 py-0.5 rounded-full ${s.status === 'running' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 dark:text-red-400'}`}>
+                            {s.name}: {s.status}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Miners */}
+                  {vps.miners && vps.miners.length > 0 && (
+                    <div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1.5">Miners</div>
+                      <div className="space-y-1">
+                        {vps.miners.map((m, j) => (
+                          <div key={j} className="flex items-center justify-between text-[10px]">
+                            <span className="text-gray-600 dark:text-slate-300">{m.name}</span>
+                            <span className={`font-mono ${m.status === 'mining' ? 'text-emerald-500' : 'text-red-500'}`}>{m.hashrate}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Cron Jobs Tab */}
+        {activeTab === "cron" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold">⏱ Cron Jobs</h3>
+              <button onClick={fetchCronJobs} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Refresh</button>
+            </div>
+            
+            {cronJobs.length === 0 ? (
+              <div className="text-center py-12 text-gray-400 dark:text-slate-500">
+                <HeroIconMulti paths={ICONS.arrowPath} className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                <p className="text-sm">No cron jobs found</p>
+                <p className="text-xs mt-1">Run pixz_cron_sync.py to populate</p>
+              </div>
+            ) : (
+              <>
+                {/* Summary */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
+                    <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">{cronJobs.length}</div>
+                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Total</div>
+                  </div>
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
+                    <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{cronJobs.filter(j => j.enabled).length}</div>
+                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Active</div>
+                  </div>
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
+                    <div className="text-lg font-bold text-gray-400 dark:text-slate-600">{cronJobs.filter(j => !j.enabled).length}</div>
+                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Paused</div>
+                  </div>
+                </div>
+
+                {/* Job List */}
+                <div className="space-y-2">
+                  {cronJobs.map((job) => (
+                    <div key={job.job_id} className={`bg-white dark:bg-slate-900 rounded-xl p-3 border ${job.enabled ? 'border-gray-200 dark:border-slate-800' : 'border-gray-100 dark:border-slate-900 opacity-60'}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${job.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
+                            <span className="text-sm font-medium truncate">{job.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1 ml-4">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 font-mono">{typeof job.schedule === 'object' ? job.schedule.display || job.schedule.expr : job.schedule}</span>
+                            {job.deliver && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">{job.deliver}</span>
+                            )}
+                          </div>
+                          {job.last_run_at && (
+                            <div className="text-[10px] text-gray-400 dark:text-slate-600 mt-1 ml-4">
+                              Last: {new Date(job.last_run_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                              {job.last_status && (
+                                <span className={`ml-1 ${job.last_status === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{job.last_status}</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        {job.no_agent && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 flex-shrink-0">script</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </main>
 
       {/* ── Bottom Nav ── */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-gray-200 dark:border-slate-800" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
-        <div className="max-w-lg mx-auto grid grid-cols-4">
+        <div className="max-w-lg mx-auto grid grid-cols-6">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
