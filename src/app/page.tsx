@@ -19,6 +19,8 @@ interface Project {
   mint_price: string;
   notes: string;
   url: string;
+  updatedAt?: string;
+  createdAt?: string;
 }
 
 interface Stats {
@@ -105,6 +107,9 @@ const ICONS = {
   check: ["M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"],
   xMark: ["M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"],
   calendar: ["M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"],
+  clock: ["M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z"],
+  users: ["M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"],
+  sparkle: ["M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"],
 };
 
 /* ── Theme Hook ── */
@@ -122,6 +127,37 @@ function useTheme() {
 }
 
 /* ── Helpers ── */
+function timeAgo(dateStr?: string): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  if (diffSec < 60) return "baru saja";
+  if (diffMin < 60) return `${diffMin} menit lalu`;
+  if (diffHour < 24) return `${diffHour} jam lalu`;
+  if (diffDay < 7) return `${diffDay} hari lalu`;
+  if (diffDay < 30) return `${Math.floor(diffDay / 7)} minggu lalu`;
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+}
+
+function isNew(dateStr?: string): boolean {
+  if (!dateStr) return false;
+  const date = new Date(dateStr);
+  const now = new Date();
+  return (now.getTime() - date.getTime()) < 24 * 60 * 60 * 1000;
+}
+
+function formatDate(dateStr?: string): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 function computeStats(projects: Project[]): Stats {
   return {
     total_projects: projects.length,
@@ -170,9 +206,28 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function SourceBadge({ source }: { source: string }) {
-  if (source === "twitter") return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/10 text-sky-700 dark:text-sky-400">𝕏 {source}</span>;
-  if (source === "telegram") return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-violet-500/10 text-violet-700 dark:text-violet-400">✈ {source}</span>;
+  if (source === "twitter") return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/10 text-sky-700 dark:text-sky-400">
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      {source}
+    </span>
+  );
+  if (source === "telegram") return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-violet-500/10 text-violet-700 dark:text-violet-400">
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+      {source}
+    </span>
+  );
   return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-500/10 text-gray-700 dark:text-gray-400">{source}</span>;
+}
+
+function NewBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 animate-pulse">
+      <HeroIcon path={ICONS.sparkle[0]} className="w-2.5 h-2.5" />
+      NEW
+    </span>
+  );
 }
 
 /* ── Main ── */
@@ -240,7 +295,14 @@ export default function Dashboard() {
     setProjects((prev) => prev.filter((p) => p.project !== projectName));
   };
 
-  const filtered = projects.filter((p) => {
+  // Sort by updatedAt/createdAt (newest first)
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
+    const dateB = new Date(b.updatedAt || b.createdAt || b.date || 0).getTime();
+    return dateB - dateA;
+  });
+
+  const filtered = sortedProjects.filter((p) => {
     if (filter !== "all" && p.type !== filter) return false;
     if (search && !p.project.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -378,34 +440,77 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Recent Activity */}
+            {/* Recent Activity - REWORKED */}
             <div>
-              <h3 className="text-sm font-semibold mb-3">Recent Activity</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold">Recent Activity</h3>
+                <span className="text-[10px] text-gray-400 dark:text-slate-500">{sortedProjects.length} total</span>
+              </div>
               <div className="space-y-2">
-                {projects.slice(0, 10).map((p, i) => (
-                  <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                    <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
-                      <TypeIcon type={p.type} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{p.project}</div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs text-gray-400 dark:text-slate-500">{p.type}</span>
-                        <span className="text-xs text-gray-300 dark:text-slate-700">·</span>
-                        <span className="text-xs text-gray-400 dark:text-slate-500">{p.source}</span>
-                      </div>
-                    </div>
-                    <StatusBadge status={p.status} />
-                  </a>
-                  </SwipeCard>
-                ))}
+                {sortedProjects.slice(0, 15).map((p, i) => {
+                  const timestamp = p.updatedAt || p.createdAt || p.date;
+                  const projectIsNew = isNew(p.updatedAt || p.createdAt);
+                  const accountsList = p.accounts ? p.accounts.split(",").filter(a => a.trim()) : [];
+
+                  return (
+                    <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                      <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                        {/* Top Row: Source + Timestamp */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <SourceBadge source={p.source} />
+                            {projectIsNew && <NewBadge />}
+                          </div>
+                          <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                            <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
+                            <span>{timeAgo(timestamp)}</span>
+                          </div>
+                        </div>
+
+                        {/* Project Name + Type */}
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="w-6 h-6 rounded-md bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
+                            <TypeIcon type={p.type} />
+                          </div>
+                          <span className="text-sm font-semibold truncate">{p.project}</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 flex-shrink-0">{p.type}</span>
+                        </div>
+
+                        {/* Accounts (if any) */}
+                        {accountsList.length > 0 && (
+                          <div className="flex items-center gap-1.5 mb-1.5 ml-8">
+                            <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
+                            <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                              {accountsList.length > 2
+                                ? `${accountsList.slice(0, 2).map(a => a.trim()).join(", ")} +${accountsList.length - 2}`
+                                : accountsList.map(a => a.trim()).join(", ")
+                              }
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Notes (if any) */}
+                        {p.notes && (
+                          <div className="text-[10px] text-gray-400 dark:text-slate-500 ml-8 mb-1.5 truncate">
+                            {p.notes}
+                          </div>
+                        )}
+
+                        {/* Bottom Row: Status + Date */}
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                          <StatusBadge status={p.status} />
+                          <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                        </div>
+                      </a>
+                    </SwipeCard>
+                  );
+                })}
               </div>
             </div>
           </>
         )}
 
-        {/* All Projects */}
+        {/* All Projects - REWORKED */}
         {activeTab === "projects" && (
           <div className="space-y-4">
             {/* Search */}
@@ -421,29 +526,72 @@ export default function Dashboard() {
                 </button>
               ))}
             </div>
-            {/* List */}
+            {/* List - REWORKED with clear timestamps */}
             <div className="space-y-2">
-              {filtered.map((p, i) => (
-                <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                  <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
-                    <TypeIcon type={p.type} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{p.project}</div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-gray-400 dark:text-slate-500">{p.chain}</span>
-                      <span className="text-xs text-gray-300 dark:text-slate-700">·</span>
-                      <SourceBadge source={p.source} />
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <StatusBadge status={p.status} />
-                    <span className="text-xs text-gray-400 dark:text-slate-500">{p.date}</span>
-                  </div>
-                </a>
-                </SwipeCard>
-              ))}
+              {filtered.map((p, i) => {
+                const timestamp = p.updatedAt || p.createdAt || p.date;
+                const projectIsNew = isNew(p.updatedAt || p.createdAt);
+                const accountsList = p.accounts ? p.accounts.split(",").filter(a => a.trim()) : [];
+
+                return (
+                  <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                    <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                      {/* Top Row: Source + Timestamp */}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <SourceBadge source={p.source} />
+                          {projectIsNew && <NewBadge />}
+                        </div>
+                        <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                          <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
+                          <span>{timeAgo(timestamp)}</span>
+                        </div>
+                      </div>
+
+                      {/* Project Name + Chain + Type */}
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div className="w-7 h-7 rounded-md bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
+                          <TypeIcon type={p.type} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold truncate">{p.project}</div>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-[10px] text-gray-500 dark:text-slate-400">{p.chain}</span>
+                            <span className="text-[10px] text-gray-300 dark:text-slate-700">·</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400">{p.type}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Accounts (if any) */}
+                      {accountsList.length > 0 && (
+                        <div className="flex items-center gap-1.5 mb-1.5 ml-9">
+                          <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
+                          <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                            {accountsList.length > 3
+                              ? `${accountsList.slice(0, 3).map(a => a.trim()).join(", ")} +${accountsList.length - 3}`
+                              : accountsList.map(a => a.trim()).join(", ")
+                            }
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Notes (if any) */}
+                      {p.notes && (
+                        <div className="text-[10px] text-gray-400 dark:text-slate-500 ml-9 mb-1.5 line-clamp-2">
+                          {p.notes}
+                        </div>
+                      )}
+
+                      {/* Bottom Row: Status + Date */}
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                        <StatusBadge status={p.status} />
+                        <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                      </div>
+                    </a>
+                  </SwipeCard>
+                );
+              })}
               {filtered.length === 0 && (
                 <div className="text-center py-12 text-gray-400 dark:text-slate-500">
                   <HeroIconMulti paths={ICONS.search} className="w-8 h-8 mx-auto mb-2 opacity-40" />
@@ -454,24 +602,57 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Whitelist Tab */}
+        {/* Whitelist Tab - REWORKED */}
         {activeTab === "whitelist" && (
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">🎫 Whitelist Pipeline</h3>
-            {projects.filter((p) => p.type.includes("whitelist") || p.type.includes("kol")).map((p, i) => (
-              <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-              <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                  <HeroIconMulti paths={ICONS.ticket} className="w-4 h-4 text-indigo-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{p.project}</div>
-                  <div className="text-xs text-gray-400 dark:text-slate-500 mt-0.5 truncate">{p.accounts || p.notes}</div>
-                </div>
-                <StatusBadge status={p.status} />
-              </a>
-              </SwipeCard>
-            ))}
+            {projects.filter((p) => p.type.includes("whitelist") || p.type.includes("kol")).sort((a, b) => {
+              const dateA = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
+              const dateB = new Date(b.updatedAt || b.createdAt || b.date || 0).getTime();
+              return dateB - dateA;
+            }).map((p, i) => {
+              const timestamp = p.updatedAt || p.createdAt || p.date;
+              const projectIsNew = isNew(p.updatedAt || p.createdAt);
+              const accountsList = p.accounts ? p.accounts.split(",").filter(a => a.trim()) : [];
+
+              return (
+                <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <SourceBadge source={p.source} />
+                        {projectIsNew && <NewBadge />}
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                        <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
+                        <span>{timeAgo(timestamp)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <div className="w-6 h-6 rounded-md bg-indigo-500/10 flex items-center justify-center">
+                        <HeroIconMulti paths={ICONS.ticket} className="w-3.5 h-3.5 text-indigo-500" />
+                      </div>
+                      <span className="text-sm font-semibold truncate">{p.project}</span>
+                    </div>
+                    {accountsList.length > 0 && (
+                      <div className="flex items-center gap-1.5 mb-1.5 ml-8">
+                        <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
+                        <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                          {accountsList.length > 2
+                            ? `${accountsList.slice(0, 2).map(a => a.trim()).join(", ")} +${accountsList.length - 2}`
+                            : accountsList.map(a => a.trim()).join(", ")
+                          }
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                      <StatusBadge status={p.status} />
+                      <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                    </div>
+                  </a>
+                </SwipeCard>
+              );
+            })}
           </div>
         )}
 
@@ -479,20 +660,28 @@ export default function Dashboard() {
         {activeTab === "testnets" && (
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">🧪 Testnet Campaigns</h3>
-            {projects.filter((p) => p.type === "testnet" || p.type === "quest").map((p, i) => (
-              <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-              <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                  <HeroIconMulti paths={ICONS.flask} className="w-4 h-4 text-amber-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{p.project}</div>
-                  <div className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{p.chain}</div>
-                </div>
-                <StatusBadge status={p.status} />
-              </a>
-              </SwipeCard>
-            ))}
+            {projects.filter((p) => p.type === "testnet" || p.type === "quest").map((p, i) => {
+              const timestamp = p.updatedAt || p.createdAt || p.date;
+              return (
+                <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
+                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                        <HeroIconMulti paths={ICONS.flask} className="w-4 h-4 text-amber-500" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">{p.project}</div>
+                        <div className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{p.chain}</div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <StatusBadge status={p.status} />
+                        <span className="text-[10px] text-gray-400 dark:text-slate-500">{timeAgo(timestamp)}</span>
+                      </div>
+                    </div>
+                  </a>
+                </SwipeCard>
+              );
+            })}
           </div>
         )}
 
