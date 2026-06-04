@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { db } = await connectToDatabase();
-    
+
     // Create user if not exists
     const existingUser = await db.collection('users').findOne({ username: process.env.AUTH_USERNAME || 'admin' });
     if (!existingUser) {
@@ -69,8 +69,26 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Accept dynamic projects from request body, fallback to hardcoded
+    let projectsToSeed = SEED_PROJECTS;
+    let mintsToSeed = UPCOMING_MINTS;
+    let cleanOld = true;
+
+    try {
+      const body = await req.json();
+      if (body.projects && Array.isArray(body.projects) && body.projects.length > 0) {
+        projectsToSeed = body.projects;
+        cleanOld = body.cleanOld !== false; // default true unless explicitly false
+      }
+      if (body.upcoming_mints && Array.isArray(body.upcoming_mints)) {
+        mintsToSeed = body.upcoming_mints;
+      }
+    } catch {
+      // No body or invalid JSON — use hardcoded defaults
+    }
+
     // Upsert all projects (always overwrite)
-    for (const p of SEED_PROJECTS) {
+    for (const p of projectsToSeed) {
       await db.collection('projects').updateOne(
         { project: p.project },
         { $set: { ...p, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } },
@@ -78,42 +96,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Clean up old projects not in seed
-    const seedNames = SEED_PROJECTS.map(p => p.project);
-    await db.collection('projects').deleteMany({ project: { $nin: seedNames } });
+    // Clean up old projects not in seed (only if cleanOld=true)
+    if (cleanOld) {
+      const seedNames = projectsToSeed.map((p: any) => p.project);
+      await db.collection('projects').deleteMany({ project: { $nin: seedNames } });
+    }
 
     // Upsert upcoming mints
     await db.collection('upcoming_mints').deleteMany({});
-    if (UPCOMING_MINTS.length > 0) {
+    if (mintsToSeed.length > 0) {
       await db.collection('upcoming_mints').insertMany(
-        UPCOMING_MINTS.map(m => ({ ...m, createdAt: new Date() }))
+        mintsToSeed.map((m: any) => ({ ...m, createdAt: new Date() }))
       );
     }
 
     // Update stats
+    const allProjects = await db.collection('projects').find({}).toArray();
     await db.collection('stats').updateOne(
       {},
       {
         $set: {
-          total_projects: SEED_PROJECTS.length,
-          total_whitelist: SEED_PROJECTS.filter(p => p.type.includes('whitelist') || p.type.includes('kol')).length,
-          total_testnet: SEED_PROJECTS.filter(p => p.type === 'testnet').length,
-          total_nft_mints: SEED_PROJECTS.filter(p => p.type.includes('nft') || p.type.includes('mint')).length,
-          total_waitlist: SEED_PROJECTS.filter(p => p.type.includes('waitlist')).length,
-          upcoming_mints: UPCOMING_MINTS.length,
-          active_campaigns: SEED_PROJECTS.filter(p => !["completed", "dropped", "expired", "failed", "closed"].includes(p.status)).length,
-          submitted: SEED_PROJECTS.filter(p => ["submitted", "success", "replied"].includes(p.status)).length,
+          total_projects: allProjects.length,
+          total_whitelist: allProjects.filter((p: any) => (p.type || '').includes('whitelist') || (p.type || '').includes('kol')).length,
+          total_testnet: allProjects.filter((p: any) => p.type === 'testnet').length,
+          total_nft_mints: allProjects.filter((p: any) => (p.type || '').includes('nft') || (p.type || '').includes('mint')).length,
+          total_waitlist: allProjects.filter((p: any) => (p.type || '').includes('waitlist')).length,
+          upcoming_mints: mintsToSeed.length,
+          active_campaigns: allProjects.filter((p: any) => !["completed", "dropped", "expired", "failed", "closed"].includes(p.status)).length,
+          submitted: allProjects.filter((p: any) => ["submitted", "success", "replied"].includes(p.status)).length,
           last_updated: new Date().toISOString(),
         },
       },
       { upsert: true }
     );
 
-    return NextResponse.json({ 
-      success: true, 
-      projectsSeeded: SEED_PROJECTS.length,
-      upcomingMints: UPCOMING_MINTS.length,
-      oldProjectsRemoved: true
+    return NextResponse.json({
+      success: true,
+      projectsSeeded: projectsToSeed.length,
+      totalInDb: allProjects.length,
+      upcomingMints: mintsToSeed.length,
+      oldProjectsRemoved: cleanOld
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
