@@ -86,7 +86,8 @@ export default function ChatWidget() {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-20 right-4 z-[60] w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg flex items-center justify-center transition-all active:scale-95"
+        className="fixed bottom-20 right-4 z-[60] w-14 h-14 rounded-full text-white shadow-lg flex items-center justify-center transition-all active:scale-95"
+        style={{ backgroundColor: "var(--accent)" }}
       >
         {open ? (
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -99,45 +100,47 @@ export default function ChatWidget() {
         )}
       </button>
       {open && (
-        <div className="fixed bottom-36 right-4 z-[60] w-80 max-h-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-800 flex flex-col overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-3 bg-indigo-600 text-white">
+        <div className="fixed bottom-36 right-4 z-[60] w-80 max-h-96 rounded-2xl shadow-2xl flex flex-col overflow-hidden" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+          <div className="flex items-center gap-2 px-4 py-3 text-white" style={{ backgroundColor: "var(--accent)" }}>
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">P</div>
             <div className="flex-1">
               <div className="text-sm font-semibold">Chat with Pixz</div>
               <div className="text-[10px] opacity-70">Response via Telegram</div>
             </div>
-            {polling && <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
+            {polling && <div className="w-2 h-2 rounded-full bg-[#7A8B6F] animate-pulse" />}
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px] max-h-[280px]">
             {messages.length === 0 && (
-              <div className="text-center py-8 text-gray-400 dark:text-slate-500">
+              <div className="text-center py-8" style={{ color: "var(--text-muted)" }}>
                 <p className="text-xs">Send a message to Pixz</p>
                 <p className="text-[10px] mt-1">Responses come via Telegram</p>
               </div>
             )}
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.from_user ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${msg.from_user ? "bg-indigo-600 text-white rounded-br-md" : "bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 rounded-bl-md"}`}>
+                <div className="max-w-[80%] px-3 py-2 rounded-2xl text-sm" style={msg.from_user ? { backgroundColor: "var(--accent)", color: "#FDFBF7", borderRadius: "1rem 1rem 0.25rem 1rem" } : { backgroundColor: "var(--bg)", color: "var(--text)", borderRadius: "1rem 1rem 1rem 0.25rem" }}>
                   {msg.text}
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
-          <div className="flex items-center gap-2 p-3 border-t border-gray-200 dark:border-slate-800">
+          <div className="flex items-center gap-2 p-3" style={{ borderTop: "1px solid var(--border)" }}>
             <input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMessage())}
               placeholder="Ask Pixz..."
-              className="flex-1 bg-gray-100 dark:bg-slate-800 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 rounded-xl px-3 py-2 text-sm outline-none"
+              style={{ backgroundColor: "var(--bg)", color: "var(--text)", border: "1px solid var(--border)" }}
               disabled={sending}
             />
             <button
               onClick={sendMessage}
               disabled={sending || !input.trim()}
-              className="w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white flex items-center justify-center"
+              className="w-9 h-9 rounded-xl text-white flex items-center justify-center disabled:opacity-50"
+              style={{ backgroundColor: "var(--accent)" }}
             >
               {sending ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

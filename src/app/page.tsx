@@ -74,18 +74,18 @@ interface VpsInfo {
   miners?: { name: string; hashrate: string; status: string }[];
 }
 
-/* ── Heroicons Solid (24x24, viewBox 0 0 24 24, fill currentColor) ── */
-function HeroIcon({ path, className }: { path: string; className?: string }) {
+/* ── Heroicons ── */
+function HeroIcon({ path, className, style }: { path: string; className?: string; style?: React.CSSProperties }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className} style={style} aria-hidden="true">
       <path d={path} />
     </svg>
   );
 }
 
-function HeroIconMulti({ paths, className }: { paths: string[]; className?: string }) {
+function HeroIconMulti({ paths, className, style }: { paths: string[]; className?: string; style?: React.CSSProperties }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className} style={style} aria-hidden="true">
       {paths.map((d, i) => <path key={i} d={d} />)}
     </svg>
   );
@@ -97,7 +97,7 @@ const ICONS = {
   ticket: ["M1.5 6.375c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v3.026a.75.75 0 0 1-.375.65 2.249 2.249 0 0 0 0 3.898.75.75 0 0 1 .375.65v3.026c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 17.625v-3.026a.75.75 0 0 1 .374-.65 2.249 2.249 0 0 0 0-3.898.75.75 0 0 1-.374-.65V6.375Z", "M16.5 5.25a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-1.5 0V6a.75.75 0 0 1 .75-.75Zm.75 4.5a.75.75 0 0 0-1.5 0v.75a.75.75 0 0 0 1.5 0v-.75Z", "M16.5 13.5a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-1.5 0v-.75a.75.75 0 0 1 .75-.75Zm.75 4.5a.75.75 0 0 0-1.5 0V18a.75.75 0 0 0 1.5 0v-.75Z", "M6 12a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H6.75A.75.75 0 0 1 6 12Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z"],
   flask: ["M10.5 3.798v5.02a3 3 0 0 1-.879 2.121l-2.377 2.377a9.845 9.845 0 0 1 5.091 1.013 8.315 8.315 0 0 0 5.713.636l.285-.071-3.954-3.955a3 3 0 0 1-.879-2.121v-5.02a23.614 23.614 0 0 0-3 0Zm4.5.138a.75.75 0 0 0 .093-1.495A24.837 24.837 0 0 0 12 2.25a25.048 25.048 0 0 0-3.093.191.75.75 0 0 0-.162 1.486 23.54 23.54 0 0 1 3.253.072v4.882a1.5 1.5 0 0 1-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0 1 15 8.818V3.936Z"],
   fire: ["M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248Z", "M15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"],
-  sun: ["M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75Z", "M7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Z", "M18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59Z", "M21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75Z", "M17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591Z", "M12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18Z", "M7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59Z", "M6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"],
+  sun: ["M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75Z", "M7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Z", "M18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59Z", "M21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75Z", "M17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z", "M12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18Z", "M7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59Z", "M6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"],
   moon: ["M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"],
   search: ["M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5Z", "M2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"],
   externalLink: ["M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Z", "M5.25 6.75a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z"],
@@ -184,17 +184,18 @@ function TypeIcon({ type }: { type: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { bg: string; text: string; dot: string }> = {
-    submitted: { bg: "bg-emerald-500/10 dark:bg-emerald-500/10", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-    success: { bg: "bg-emerald-500/10 dark:bg-emerald-500/10", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-    replied: { bg: "bg-emerald-500/10 dark:bg-emerald-500/10", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-    completed: { bg: "bg-emerald-500/10 dark:bg-emerald-500/10", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-    pending: { bg: "bg-amber-500/10 dark:bg-amber-500/10", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
-    active: { bg: "bg-amber-500/10 dark:bg-amber-500/10", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
-    logged: { bg: "bg-amber-500/10 dark:bg-amber-500/10", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
-    hunting: { bg: "bg-amber-500/10 dark:bg-amber-500/10", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
-    partial: { bg: "bg-orange-500/10 dark:bg-orange-500/10", text: "text-orange-700 dark:text-orange-400", dot: "bg-orange-500" },
-    failed: { bg: "bg-red-500/10 dark:bg-red-500/10", text: "text-red-700 dark:text-red-400", dot: "bg-red-500" },
-    closed: { bg: "bg-gray-500/10 dark:bg-gray-500/10", text: "text-gray-700 dark:text-gray-400", dot: "bg-gray-500" },
+    submitted: { bg: "bg-[#7A8B6F]/10", text: "text-[#7A8B6F]", dot: "bg-[#7A8B6F]" },
+    success: { bg: "bg-[#7A8B6F]/10", text: "text-[#7A8B6F]", dot: "bg-[#7A8B6F]" },
+    replied: { bg: "bg-[#7A8B6F]/10", text: "text-[#7A8B6F]", dot: "bg-[#7A8B6F]" },
+    completed: { bg: "bg-[#7A8B6F]/10", text: "text-[#7A8B6F]", dot: "bg-[#7A8B6F]" },
+    Done: { bg: "bg-[#7A8B6F]/10", text: "text-[#7A8B6F]", dot: "bg-[#7A8B6F]" },
+    pending: { bg: "bg-[#C4956A]/10", text: "text-[#C4956A]", dot: "bg-[#C4956A]" },
+    active: { bg: "bg-[#C4956A]/10", text: "text-[#C4956A]", dot: "bg-[#C4956A]" },
+    logged: { bg: "bg-[#C4956A]/10", text: "text-[#C4956A]", dot: "bg-[#C4956A]" },
+    hunting: { bg: "bg-[#C4956A]/10", text: "text-[#C4956A]", dot: "bg-[#C4956A]" },
+    partial: { bg: "bg-[#D4735E]/10", text: "text-[#D4735E]", dot: "bg-[#D4735E]" },
+    failed: { bg: "bg-[#B94646]/10", text: "text-[#B94646]", dot: "bg-[#B94646]" },
+    closed: { bg: "bg-[var(--text-muted)]/10", text: "text-[var(--text-muted)]", dot: "bg-[var(--text-muted)]" },
   };
   const { bg, text, dot } = map[status] || map.pending;
   return (
@@ -207,23 +208,23 @@ function StatusBadge({ status }: { status: string }) {
 
 function SourceBadge({ source }: { source: string }) {
   if (source === "twitter") return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/10 text-sky-700 dark:text-sky-400">
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#C4956A]/10 text-[#C4956A]">
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
       {source}
     </span>
   );
   if (source === "telegram") return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-violet-500/10 text-violet-700 dark:text-violet-400">
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#7A8B6F]/10 text-[#7A8B6F]">
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" /></svg>
       {source}
     </span>
   );
-  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-500/10 text-gray-700 dark:text-gray-400">{source}</span>;
+  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[var(--accent-soft)] text-[var(--text-soft)]">{source}</span>;
 }
 
 function NewBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 animate-pulse">
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#C4956A]/10 text-[#C4956A] animate-pulse">
       <HeroIcon path={ICONS.sparkle[0]} className="w-2.5 h-2.5" />
       NEW
     </span>
@@ -241,7 +242,6 @@ export default function Dashboard() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [mobileMenu, setMobileMenu] = useState(false);
   const { dark, toggle: toggleTheme } = useTheme();
   const router = useRouter();
 
@@ -295,7 +295,6 @@ export default function Dashboard() {
     setProjects((prev) => prev.filter((p) => p.project !== projectName));
   };
 
-  // Sort by updatedAt/createdAt (newest first)
   const sortedProjects = [...projects].sort((a, b) => {
     const dateA = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
     const dateB = new Date(b.updatedAt || b.createdAt || b.date || 0).getTime();
@@ -330,33 +329,33 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--bg)" }}>
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 animate-pulse">
-            <HeroIconMulti paths={ICONS.bolt} className="w-8 h-8 text-indigo-500" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl animate-pulse" style={{ backgroundColor: "var(--accent-soft)", border: "1px solid var(--border)" }}>
+            <HeroIconMulti paths={ICONS.bolt} className="w-8 h-8" style={{ color: "var(--accent)" }} />
           </div>
-          <p className="text-gray-500 dark:text-slate-400 text-sm">Loading...</p>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-slate-800">
+      <header className="sticky top-0 z-50 backdrop-blur-xl" style={{ backgroundColor: "color-mix(in srgb, var(--bg) 80%, transparent)", borderBottom: "1px solid var(--border)" }}>
         <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
-              <HeroIconMulti paths={ICONS.bolt} className="w-5 h-5 text-indigo-500" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "var(--accent-soft)" }}>
+              <HeroIconMulti paths={ICONS.bolt} className="w-5 h-5" style={{ color: "var(--accent)" }} />
             </div>
             <span className="font-bold text-sm">PIXZ TRACKER</span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <button onClick={toggleTheme} className="p-2 rounded-lg transition-colors" style={{ color: "var(--text-muted)" }}>
               {dark
-                ? <HeroIconMulti paths={ICONS.sun} className="w-5 h-5 text-amber-400" />
-                : <HeroIcon path={ICONS.moon[0]} className="w-5 h-5 text-slate-600" />
+                ? <HeroIconMulti paths={ICONS.sun} className="w-5 h-5" style={{ color: "#C4956A" }} />
+                : <HeroIcon path={ICONS.moon[0]} className="w-5 h-5" style={{ color: "var(--text-muted)" }} />
               }
             </button>
             <button onClick={handleLogout} className="btn-ghost text-xs px-3 py-2">
@@ -375,26 +374,26 @@ export default function Dashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Projects", value: stats?.total_projects || 0, color: "indigo", paths: ICONS.folder },
-                { label: "Whitelist", value: stats?.total_whitelist || 0, color: "emerald", paths: ICONS.ticket },
-                { label: "Testnets", value: stats?.total_testnet || 0, color: "amber", paths: ICONS.flask },
-                { label: "Active", value: stats?.active_campaigns || 0, color: "violet", paths: ICONS.fire },
+                { label: "Projects", value: stats?.total_projects || 0, color: "var(--accent)", paths: ICONS.folder },
+                { label: "Whitelist", value: stats?.total_whitelist || 0, color: "var(--sage)", paths: ICONS.ticket },
+                { label: "Testnets", value: stats?.total_testnet || 0, color: "var(--accent)", paths: ICONS.flask },
+                { label: "Active", value: stats?.active_campaigns || 0, color: "var(--sage)", paths: ICONS.fire },
               ].map((s) => (
-                <div key={s.label} className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200 dark:border-slate-800">
+                <div key={s.label} className="rounded-2xl p-4" style={{ backgroundColor: "var(--bg-card)" }}>
                   <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-8 h-8 rounded-lg bg-${s.color}-500/10 flex items-center justify-center`}>
-                      <HeroIconMulti paths={s.paths} className={`w-4 h-4 text-${s.color}-500`} />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${s.color}1A` }}>
+                      <HeroIconMulti paths={s.paths} className="w-4 h-4" style={{ color: s.color }} />
                     </div>
                   </div>
-                  <div className={`text-2xl font-bold text-${s.color}-600 dark:text-${s.color}-400`}>{s.value}</div>
-                  <div className="text-xs text-gray-500 dark:text-slate-500 mt-0.5">{s.label}</div>
+                  <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
+                  <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{s.label}</div>
                 </div>
               ))}
             </div>
 
             {/* Source Breakdown */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200 dark:border-slate-800">
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">Source</h3>
+            <div className="rounded-2xl p-4" style={{ backgroundColor: "var(--bg-card)" }}>
+              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--text-muted)" }}>Source</h3>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <SourceBadge source="twitter" />
@@ -405,26 +404,25 @@ export default function Dashboard() {
                   <span className="text-sm font-bold">{stats?.telegram_sourced || 0}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 dark:text-slate-400">Submitted</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{stats?.submitted || 0}</span>
+                  <span className="text-xs" style={{ color: "var(--text-muted)" }}>Submitted</span>
+                  <span className="text-sm font-bold" style={{ color: "var(--sage)" }}>{stats?.submitted || 0}</span>
                 </div>
               </div>
             </div>
 
-            {/* Upcoming Mints - Improved */}
+            {/* Upcoming Mints */}
             {upcomingMints.length > 0 && (
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <HeroIconMulti paths={ICONS.calendar} className="w-4 h-4 text-indigo-500" />
+                    <HeroIconMulti paths={ICONS.calendar} className="w-4 h-4" style={{ color: "var(--accent)" }} />
                     Upcoming Mints
                   </h3>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">{upcomingMints.length}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--accent-soft)", color: "var(--accent)" }}>{upcomingMints.length}</span>
                 </div>
                 <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none" }}>
                   {upcomingMints
                     .sort((a, b) => {
-                      // Sort: dated first, then TBA last
                       const hasDateA = a.date && !a.date.includes("TBA");
                       const hasDateB = b.date && !b.date.includes("TBA");
                       if (hasDateA && !hasDateB) return -1;
@@ -437,31 +435,28 @@ export default function Dashboard() {
 
                       return (
                         <a key={i} href={m.twitter || "#"} target="_blank" rel="noopener noreferrer"
-                          className={`flex-shrink-0 w-56 bg-white dark:bg-slate-900 rounded-2xl p-4 border active:scale-95 transition-all ${isTBA ? 'border-gray-200 dark:border-slate-800 opacity-70' : 'border-indigo-200 dark:border-indigo-900/50 shadow-sm shadow-indigo-500/10'}`}
-                          style={{ scrollSnapAlign: "start" }}>
-                          {/* Image + Name */}
+                          className={`flex-shrink-0 w-56 rounded-2xl p-4 active:scale-95 transition-all ${isTBA ? 'opacity-70' : ''}`}
+                          style={{ backgroundColor: "var(--bg-card)", scrollSnapAlign: "start" }}>
                           <div className="flex items-center gap-3 mb-3">
                             <div className="relative">
-                              <img alt={m.name} className="w-11 h-11 rounded-xl object-cover border border-gray-200 dark:border-slate-700" src={m.image} onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=6366f1&color=fff&size=44`; }} />
+                              <img alt={m.name} className="w-11 h-11 rounded-xl object-cover" style={{ border: "1px solid var(--border)" }} src={m.image} onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=C4956A&color=fff&size=44`; }} />
                               {isFree && (
-                                <span className="absolute -top-1 -right-1 text-[8px] px-1 py-0.5 rounded-full bg-emerald-500 text-white font-bold">FREE</span>
+                                <span className="absolute -top-1 -right-1 text-[8px] px-1 py-0.5 rounded-full bg-[#7A8B6F] text-white font-bold">FREE</span>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm truncate">{m.name}</div>
-                              <div className="text-[10px] text-gray-500 dark:text-slate-400 mt-0.5">{m.chain}</div>
+                              <div className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>{m.chain}</div>
                             </div>
                           </div>
-
-                          {/* Date + Price */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
-                              <HeroIcon path={ICONS.clock[0]} className="w-3.5 h-3.5 text-gray-400 dark:text-slate-500" />
-                              <span className={`text-xs font-medium ${isTBA ? 'text-gray-400 dark:text-slate-600' : 'text-indigo-600 dark:text-indigo-400'}`}>
+                              <HeroIcon path={ICONS.clock[0]} className="w-3.5 h-3.5" style={{ color: "var(--text-muted)" }} />
+                              <span className={`text-xs font-medium ${isTBA ? 'opacity-50' : ''}`} style={{ color: "var(--accent)" }}>
                                 {isTBA ? 'TBA' : m.date}
                               </span>
                             </div>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${isFree ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
+                            <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: isFree ? 'rgba(122,139,111,0.1)' : 'rgba(196,149,106,0.1)', color: isFree ? 'var(--sage)' : 'var(--accent)' }}>
                               {m.price || 'TBA'}
                             </span>
                           </div>
@@ -472,11 +467,11 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Recent Activity - REWORKED */}
+            {/* Recent Activity */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold">Recent Activity</h3>
-                <span className="text-[10px] text-gray-400 dark:text-slate-500">{sortedProjects.length} total</span>
+                <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{sortedProjects.length} total</span>
               </div>
               <div className="space-y-2">
                 {sortedProjects.slice(0, 15).map((p, i) => {
@@ -486,33 +481,28 @@ export default function Dashboard() {
 
                   return (
                     <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                      <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                        {/* Top Row: Source + Timestamp */}
+                      <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl p-3 active:scale-[0.98] transition-transform" style={{ backgroundColor: "var(--bg-card)" }}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <SourceBadge source={p.source} />
                             {projectIsNew && <NewBadge />}
                           </div>
-                          <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                          <div className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
                             <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
                             <span>{timeAgo(timestamp)}</span>
                           </div>
                         </div>
-
-                        {/* Project Name + Type */}
                         <div className="flex items-center gap-2 mb-1.5">
-                          <div className="w-6 h-6 rounded-md bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
+                          <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "var(--accent-soft)", color: "var(--text-muted)" }}>
                             <TypeIcon type={p.type} />
                           </div>
                           <span className="text-sm font-semibold truncate">{p.project}</span>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 flex-shrink-0">{p.type}</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded flex-shrink-0" style={{ backgroundColor: "var(--bg)", color: "var(--text-muted)" }}>{p.type}</span>
                         </div>
-
-                        {/* Accounts (if any) */}
                         {accountsList.length > 0 && (
                           <div className="flex items-center gap-1.5 mb-1.5 ml-8">
-                            <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
-                            <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                            <HeroIcon path={ICONS.users[0]} className="w-3 h-3" style={{ color: "var(--text-muted)" }} />
+                            <span className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
                               {accountsList.length > 2
                                 ? `${accountsList.slice(0, 2).map(a => a.trim()).join(", ")} +${accountsList.length - 2}`
                                 : accountsList.map(a => a.trim()).join(", ")
@@ -520,18 +510,14 @@ export default function Dashboard() {
                             </span>
                           </div>
                         )}
-
-                        {/* Notes (if any) */}
                         {p.notes && (
-                          <div className="text-[10px] text-gray-400 dark:text-slate-500 ml-8 mb-1.5 truncate">
+                          <div className="text-[10px] ml-8 mb-1.5 truncate" style={{ color: "var(--text-muted)" }}>
                             {p.notes}
                           </div>
                         )}
-
-                        {/* Bottom Row: Status + Date */}
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                        <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid var(--border-soft)" }}>
                           <StatusBadge status={p.status} />
-                          <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                          <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{formatDate(timestamp)}</span>
                         </div>
                       </a>
                     </SwipeCard>
@@ -542,23 +528,20 @@ export default function Dashboard() {
           </>
         )}
 
-        {/* All Projects - REWORKED */}
+        {/* All Projects */}
         {activeTab === "projects" && (
           <div className="space-y-4">
-            {/* Search */}
             <div className="relative">
-              <HeroIconMulti paths={ICONS.search} className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500" />
-              <input type="text" placeholder="Search projects..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-shadow" />
+              <HeroIconMulti paths={ICONS.search} className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-muted)" }} />
+              <input type="text" placeholder="Search projects..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", color: "var(--text)" }} />
             </div>
-            {/* Filters */}
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
               {filterTabs.map((t) => (
-                <button key={t.id} onClick={() => setFilter(t.id)} className={`flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${filter === t.id ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400" : "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-500 dark:text-slate-400"}`}>
+                <button key={t.id} onClick={() => setFilter(t.id)} className="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg transition-all" style={filter === t.id ? { backgroundColor: "var(--accent-soft)", border: "1px solid var(--accent)", color: "var(--accent)" } : { backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", color: "var(--text-muted)" }}>
                   {t.label}
                 </button>
               ))}
             </div>
-            {/* List - REWORKED with clear timestamps */}
             <div className="space-y-2">
               {filtered.map((p, i) => {
                 const timestamp = p.updatedAt || p.createdAt || p.date;
@@ -567,39 +550,34 @@ export default function Dashboard() {
 
                 return (
                   <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                    <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
-                      {/* Top Row: Source + Timestamp */}
+                    <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl p-3 active:scale-[0.98] transition-transform" style={{ backgroundColor: "var(--bg-card)" }}>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <SourceBadge source={p.source} />
                           {projectIsNew && <NewBadge />}
                         </div>
-                        <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                        <div className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
                           <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
                           <span>{timeAgo(timestamp)}</span>
                         </div>
                       </div>
-
-                      {/* Project Name + Chain + Type */}
                       <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-7 h-7 rounded-md bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400">
+                        <div className="w-7 h-7 rounded-md flex items-center justify-center" style={{ backgroundColor: "var(--accent-soft)", color: "var(--text-muted)" }}>
                           <TypeIcon type={p.type} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-semibold truncate">{p.project}</div>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="text-[10px] text-gray-500 dark:text-slate-400">{p.chain}</span>
-                            <span className="text-[10px] text-gray-300 dark:text-slate-700">·</span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400">{p.type}</span>
+                            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{p.chain}</span>
+                            <span className="text-[10px]" style={{ color: "var(--border)" }}>·</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: "var(--bg)", color: "var(--text-muted)" }}>{p.type}</span>
                           </div>
                         </div>
                       </div>
-
-                      {/* Accounts (if any) */}
                       {accountsList.length > 0 && (
                         <div className="flex items-center gap-1.5 mb-1.5 ml-9">
-                          <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
-                          <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                          <HeroIcon path={ICONS.users[0]} className="w-3 h-3" style={{ color: "var(--text-muted)" }} />
+                          <span className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
                             {accountsList.length > 3
                               ? `${accountsList.slice(0, 3).map(a => a.trim()).join(", ")} +${accountsList.length - 3}`
                               : accountsList.map(a => a.trim()).join(", ")
@@ -607,25 +585,21 @@ export default function Dashboard() {
                           </span>
                         </div>
                       )}
-
-                      {/* Notes (if any) */}
                       {p.notes && (
-                        <div className="text-[10px] text-gray-400 dark:text-slate-500 ml-9 mb-1.5 line-clamp-2">
+                        <div className="text-[10px] ml-9 mb-1.5 line-clamp-2" style={{ color: "var(--text-muted)" }}>
                           {p.notes}
                         </div>
                       )}
-
-                      {/* Bottom Row: Status + Date */}
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid var(--border-soft)" }}>
                         <StatusBadge status={p.status} />
-                        <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{formatDate(timestamp)}</span>
                       </div>
                     </a>
                   </SwipeCard>
                 );
               })}
               {filtered.length === 0 && (
-                <div className="text-center py-12 text-gray-400 dark:text-slate-500">
+                <div className="text-center py-12" style={{ color: "var(--text-muted)" }}>
                   <HeroIconMulti paths={ICONS.search} className="w-8 h-8 mx-auto mb-2 opacity-40" />
                   <p className="text-sm">No projects found</p>
                 </div>
@@ -634,10 +608,10 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Whitelist Tab - REWORKED */}
+        {/* Whitelist Tab */}
         {activeTab === "whitelist" && (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold">🎫 Whitelist Pipeline</h3>
+            <h3 className="text-sm font-semibold">Whitelist Pipeline</h3>
             {projects.filter((p) => p.type.includes("whitelist") || p.type.includes("kol")).sort((a, b) => {
               const dateA = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
               const dateB = new Date(b.updatedAt || b.createdAt || b.date || 0).getTime();
@@ -649,27 +623,27 @@ export default function Dashboard() {
 
               return (
                 <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl p-3 active:scale-[0.98] transition-transform" style={{ backgroundColor: "var(--bg-card)" }}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <SourceBadge source={p.source} />
                         {projectIsNew && <NewBadge />}
                       </div>
-                      <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                      <div className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
                         <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
                         <span>{timeAgo(timestamp)}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 mb-1.5">
-                      <div className="w-6 h-6 rounded-md bg-indigo-500/10 flex items-center justify-center">
-                        <HeroIconMulti paths={ICONS.ticket} className="w-3.5 h-3.5 text-indigo-500" />
+                      <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "var(--accent-soft)" }}>
+                        <HeroIconMulti paths={ICONS.ticket} className="w-3.5 h-3.5" style={{ color: "var(--accent)" }} />
                       </div>
                       <span className="text-sm font-semibold truncate">{p.project}</span>
                     </div>
                     {accountsList.length > 0 && (
                       <div className="flex items-center gap-1.5 mb-1.5 ml-8">
-                        <HeroIcon path={ICONS.users[0]} className="w-3 h-3 text-gray-400 dark:text-slate-500" />
-                        <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                        <HeroIcon path={ICONS.users[0]} className="w-3 h-3" style={{ color: "var(--text-muted)" }} />
+                        <span className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
                           {accountsList.length > 2
                             ? `${accountsList.slice(0, 2).map(a => a.trim()).join(", ")} +${accountsList.length - 2}`
                             : accountsList.map(a => a.trim()).join(", ")
@@ -677,9 +651,9 @@ export default function Dashboard() {
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid var(--border-soft)" }}>
                       <StatusBadge status={p.status} />
-                      <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                      <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{formatDate(timestamp)}</span>
                     </div>
                   </a>
                 </SwipeCard>
@@ -691,23 +665,23 @@ export default function Dashboard() {
         {/* Testnets Tab */}
         {activeTab === "testnets" && (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold">🧪 Testnet Campaigns</h3>
+            <h3 className="text-sm font-semibold">Testnet Campaigns</h3>
             {projects.filter((p) => p.type === "testnet" || p.type === "quest").map((p, i) => {
               const timestamp = p.updatedAt || p.createdAt || p.date;
               return (
                 <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 active:scale-[0.98] transition-transform">
+                  <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl p-3 active:scale-[0.98] transition-transform" style={{ backgroundColor: "var(--bg-card)" }}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                        <HeroIconMulti paths={ICONS.flask} className="w-4 h-4 text-amber-500" />
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "var(--accent-soft)" }}>
+                        <HeroIconMulti paths={ICONS.flask} className="w-4 h-4" style={{ color: "var(--accent)" }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{p.project}</div>
-                        <div className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{p.chain}</div>
+                        <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{p.chain}</div>
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <StatusBadge status={p.status} />
-                        <span className="text-[10px] text-gray-400 dark:text-slate-500">{timeAgo(timestamp)}</span>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{timeAgo(timestamp)}</span>
                       </div>
                     </div>
                   </a>
@@ -721,29 +695,25 @@ export default function Dashboard() {
         {activeTab === "failed" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">❌ Gagal / Partial</h3>
-              <span className="text-xs text-gray-500 dark:text-slate-500">
+              <h3 className="text-sm font-semibold">Gagal / Partial</h3>
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                 {projects.filter(p => ["failed", "partial"].includes(p.status)).length} projects
               </span>
             </div>
-
-            {/* Summary */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-red-200 dark:border-red-900/30">
-                <div className="text-lg font-bold text-red-600 dark:text-red-400">
+              <div className="rounded-xl p-3" style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(185,70,70,0.2)" }}>
+                <div className="text-lg font-bold" style={{ color: "#B94646" }}>
                   {projects.filter(p => p.status === "failed").length}
                 </div>
-                <div className="text-[10px] text-gray-500 dark:text-slate-500">Failed</div>
+                <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Failed</div>
               </div>
-              <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-amber-200 dark:border-amber-900/30">
-                <div className="text-lg font-bold text-amber-600 dark:text-amber-400">
+              <div className="rounded-xl p-3" style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(212,115,94,0.2)" }}>
+                <div className="text-lg font-bold" style={{ color: "#D4735E" }}>
                   {projects.filter(p => p.status === "partial").length}
                 </div>
-                <div className="text-[10px] text-gray-500 dark:text-slate-500">Partial</div>
+                <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Partial</div>
               </div>
             </div>
-
-            {/* Failed List */}
             <div className="space-y-2">
               {projects.filter(p => ["failed", "partial"].includes(p.status)).sort((a, b) => {
                 const dateA = new Date(a.updatedAt || a.createdAt || a.date || 0).getTime();
@@ -753,37 +723,37 @@ export default function Dashboard() {
                 const timestamp = p.updatedAt || p.createdAt || p.date;
                 return (
                   <SwipeCard key={i} projectName={p.project} onDelete={() => handleDeleteProject(p.project)}>
-                    <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-900 rounded-xl p-3 border border-red-200 dark:border-red-900/30 active:scale-[0.98] transition-transform">
+                    <a href={p.url || "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl p-3 active:scale-[0.98] transition-transform" style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(185,70,70,0.15)" }}>
                       <div className="flex items-center justify-between mb-2">
                         <SourceBadge source={p.source} />
-                        <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
+                        <div className="flex items-center gap-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
                           <HeroIcon path={ICONS.clock[0]} className="w-3 h-3" />
                           <span>{timeAgo(timestamp)}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-6 h-6 rounded-md bg-red-500/10 flex items-center justify-center">
-                          <HeroIcon path={ICONS.xMark[0]} className="w-3.5 h-3.5 text-red-500" />
+                        <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "rgba(185,70,70,0.1)" }}>
+                          <HeroIcon path={ICONS.xMark[0]} className="w-3.5 h-3.5" style={{ color: "#B94646" }} />
                         </div>
                         <span className="text-sm font-semibold truncate">{p.project}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400">{p.type}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: "var(--bg)", color: "var(--text-muted)" }}>{p.type}</span>
                       </div>
                       {p.notes && (
-                        <div className="text-[10px] text-red-500/70 dark:text-red-400/70 ml-8 mb-1.5">
+                        <div className="text-[10px] ml-8 mb-1.5" style={{ color: "rgba(185,70,70,0.6)" }}>
                           ⚠ {p.notes}
                         </div>
                       )}
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-red-100 dark:border-red-900/20">
+                      <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid rgba(185,70,70,0.1)" }}>
                         <StatusBadge status={p.status} />
-                        <span className="text-[10px] text-gray-400 dark:text-slate-500">{formatDate(timestamp)}</span>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{formatDate(timestamp)}</span>
                       </div>
                     </a>
                   </SwipeCard>
                 );
               })}
               {projects.filter(p => ["failed", "partial"].includes(p.status)).length === 0 && (
-                <div className="text-center py-12 text-gray-400 dark:text-slate-500">
-                  <HeroIconMulti paths={ICONS.check} className="w-8 h-8 mx-auto mb-2 opacity-40 text-emerald-500" />
+                <div className="text-center py-12" style={{ color: "var(--text-muted)" }}>
+                  <HeroIconMulti paths={ICONS.check} className="w-8 h-8 mx-auto mb-2 opacity-40" style={{ color: "var(--sage)" }} />
                   <p className="text-sm">Tidak ada yang gagal!</p>
                   <p className="text-xs mt-1">Semua project berhasil</p>
                 </div>
@@ -796,107 +766,87 @@ export default function Dashboard() {
         {activeTab === "vps" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">⚡ VPS / GPU</h3>
-              <button onClick={fetchVpsData} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Refresh</button>
+              <h3 className="text-sm font-semibold">VPS / GPU</h3>
+              <button onClick={fetchVpsData} className="text-xs" style={{ color: "var(--accent)" }}>Refresh</button>
             </div>
-
             {vpsList.length === 0 ? (
-              <div className="text-center py-12 text-gray-400 dark:text-slate-500">
+              <div className="text-center py-12" style={{ color: "var(--text-muted)" }}>
                 <HeroIconMulti paths={ICONS.bolt} className="w-8 h-8 mx-auto mb-2 opacity-40" />
                 <p className="text-sm">No VPS data</p>
                 <p className="text-xs mt-1">Add VPS info via /api/vps</p>
               </div>
             ) : (
               vpsList.map((vps, i) => (
-                <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200 dark:border-slate-800 space-y-3">
-                  {/* Header */}
+                <div key={i} className="rounded-2xl p-4 space-y-3" style={{ backgroundColor: "var(--bg-card)" }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className={`w-2.5 h-2.5 rounded-full ${vps.status === 'online' ? 'bg-emerald-500 animate-pulse' : vps.status === 'warning' ? 'bg-amber-500' : 'bg-red-500'}`} />
+                      <div className={`w-2.5 h-2.5 rounded-full ${vps.status === 'online' ? 'bg-[#7A8B6F] animate-pulse' : vps.status === 'warning' ? 'bg-[#C4956A]' : 'bg-[#B94646]'}`} />
                       <span className="font-semibold text-sm">{vps.name}</span>
                     </div>
-                    <span className="text-[10px] font-mono text-gray-400 dark:text-slate-500">{vps.ip}</span>
+                    <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>{vps.ip}</span>
                   </div>
-
-                  {/* Resource Bars */}
                   <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">CPU</div>
-                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${vps.cpu > 80 ? 'bg-red-500' : vps.cpu > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.cpu}%` }} />
+                    {[
+                      { label: "CPU", value: vps.cpu, display: `${vps.cpu}%` },
+                      { label: "RAM", value: vps.ram.percent, display: `${vps.ram.used}/${vps.ram.total}GB` },
+                      { label: "Disk", value: vps.disk.percent, display: `${vps.disk.used}/${vps.disk.total}GB` },
+                    ].map((bar) => (
+                      <div key={bar.label}>
+                        <div className="text-[10px] mb-1" style={{ color: "var(--text-muted)" }}>{bar.label}</div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "var(--border)" }}>
+                          <div className="h-full rounded-full" style={{ width: `${bar.value}%`, backgroundColor: bar.value > 80 ? '#B94646' : bar.value > 50 ? '#C4956A' : '#7A8B6F' }} />
+                        </div>
+                        <div className="text-[10px] font-medium mt-0.5">{bar.display}</div>
                       </div>
-                      <div className="text-[10px] font-medium mt-0.5">{vps.cpu}%</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">RAM</div>
-                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${vps.ram.percent > 80 ? 'bg-red-500' : vps.ram.percent > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.ram.percent}%` }} />
-                      </div>
-                      <div className="text-[10px] font-medium mt-0.5">{vps.ram.used}/{vps.ram.total}GB</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1">Disk</div>
-                      <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${vps.disk.percent > 80 ? 'bg-red-500' : vps.disk.percent > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${vps.disk.percent}%` }} />
-                      </div>
-                      <div className="text-[10px] font-medium mt-0.5">{vps.disk.used}/{vps.disk.total}GB</div>
-                    </div>
+                    ))}
                   </div>
-
-                  {/* Uptime */}
-                  <div className="flex items-center gap-2 text-[10px] text-gray-400 dark:text-slate-500">
+                  <div className="flex items-center gap-2 text-[10px]" style={{ color: "var(--text-muted)" }}>
                     <span>Uptime: {vps.uptime}</span>
                   </div>
-
-                  {/* GPU */}
                   {vps.gpu && (
-                    <div className="bg-indigo-500/5 dark:bg-indigo-500/10 rounded-xl p-3 border border-indigo-500/20">
+                    <div className="rounded-xl p-3" style={{ backgroundColor: "var(--accent-soft)", border: "1px solid var(--border)" }}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">🎮 {vps.gpu.name}</span>
-                        <span className="text-[10px] text-indigo-500">{vps.gpu.temp}°C</span>
+                        <span className="text-xs font-medium" style={{ color: "var(--accent)" }}>{vps.gpu.name}</span>
+                        <span className="text-[10px]" style={{ color: "var(--accent)" }}>{vps.gpu.temp}°C</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className="text-[10px] text-gray-500 dark:text-slate-400">Util</div>
-                          <div className="h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${vps.gpu.util}%` }} />
+                          <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Util</div>
+                          <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "var(--border)" }}>
+                            <div className="h-full rounded-full" style={{ width: `${vps.gpu.util}%`, backgroundColor: "var(--accent)" }} />
                           </div>
                           <div className="text-[10px] font-medium">{vps.gpu.util}%</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-gray-500 dark:text-slate-400">VRAM</div>
-                          <div className="h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${(vps.gpu.mem.used / vps.gpu.mem.total) * 100}%` }} />
+                          <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>VRAM</div>
+                          <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "var(--border)" }}>
+                            <div className="h-full rounded-full" style={{ width: `${(vps.gpu.mem.used / vps.gpu.mem.total) * 100}%`, backgroundColor: "var(--accent)" }} />
                           </div>
                           <div className="text-[10px] font-medium">{vps.gpu.mem.used}/{vps.gpu.mem.total}MB</div>
                         </div>
                       </div>
                     </div>
                   )}
-
-                  {/* Services */}
                   {vps.services.length > 0 && (
                     <div>
-                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1.5">Services</div>
+                      <div className="text-[10px] mb-1.5" style={{ color: "var(--text-muted)" }}>Services</div>
                       <div className="flex flex-wrap gap-1.5">
                         {vps.services.map((s, j) => (
-                          <span key={j} className={`text-[9px] px-2 py-0.5 rounded-full ${s.status === 'running' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 dark:text-red-400'}`}>
+                          <span key={j} className="text-[9px] px-2 py-0.5 rounded-full" style={s.status === 'running' ? { backgroundColor: 'rgba(122,139,111,0.1)', color: '#7A8B6F' } : { backgroundColor: 'rgba(185,70,70,0.1)', color: '#B94646' }}>
                             {s.name}: {s.status}
                           </span>
                         ))}
                       </div>
                     </div>
                   )}
-
-                  {/* Miners */}
                   {vps.miners && vps.miners.length > 0 && (
                     <div>
-                      <div className="text-[10px] text-gray-500 dark:text-slate-400 mb-1.5">Miners</div>
+                      <div className="text-[10px] mb-1.5" style={{ color: "var(--text-muted)" }}>Miners</div>
                       <div className="space-y-1">
                         {vps.miners.map((m, j) => (
                           <div key={j} className="flex items-center justify-between text-[10px]">
-                            <span className="text-gray-600 dark:text-slate-300">{m.name}</span>
-                            <span className={`font-mono ${m.status === 'mining' ? 'text-emerald-500' : 'text-red-500'}`}>{m.hashrate}</span>
+                            <span style={{ color: "var(--text-soft)" }}>{m.name}</span>
+                            <span className="font-mono" style={{ color: m.status === 'mining' ? '#7A8B6F' : '#B94646' }}>{m.hashrate}</span>
                           </div>
                         ))}
                       </div>
@@ -912,61 +862,57 @@ export default function Dashboard() {
         {activeTab === "cron" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">⏱ Cron Jobs</h3>
-              <button onClick={fetchCronJobs} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Refresh</button>
+              <h3 className="text-sm font-semibold">Cron Jobs</h3>
+              <button onClick={fetchCronJobs} className="text-xs" style={{ color: "var(--accent)" }}>Refresh</button>
             </div>
-            
             {cronJobs.length === 0 ? (
-              <div className="text-center py-12 text-gray-400 dark:text-slate-500">
+              <div className="text-center py-12" style={{ color: "var(--text-muted)" }}>
                 <HeroIconMulti paths={ICONS.arrowPath} className="w-8 h-8 mx-auto mb-2 opacity-40" />
                 <p className="text-sm">No cron jobs found</p>
                 <p className="text-xs mt-1">Run pixz_cron_sync.py to populate</p>
               </div>
             ) : (
               <>
-                {/* Summary */}
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
-                    <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">{cronJobs.length}</div>
-                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Total</div>
+                  <div className="rounded-xl p-3 text-center" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <div className="text-lg font-bold" style={{ color: "var(--accent)" }}>{cronJobs.length}</div>
+                    <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Total</div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
-                    <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{cronJobs.filter(j => j.enabled).length}</div>
-                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Active</div>
+                  <div className="rounded-xl p-3 text-center" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <div className="text-lg font-bold" style={{ color: "var(--sage)" }}>{cronJobs.filter(j => j.enabled).length}</div>
+                    <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Active</div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-gray-200 dark:border-slate-800 text-center">
-                    <div className="text-lg font-bold text-gray-400 dark:text-slate-600">{cronJobs.filter(j => !j.enabled).length}</div>
-                    <div className="text-[10px] text-gray-500 dark:text-slate-500">Paused</div>
+                  <div className="rounded-xl p-3 text-center" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <div className="text-lg font-bold" style={{ color: "var(--text-muted)" }}>{cronJobs.filter(j => !j.enabled).length}</div>
+                    <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Paused</div>
                   </div>
                 </div>
-
-                {/* Job List */}
                 <div className="space-y-2">
                   {cronJobs.map((job) => (
-                    <div key={job.job_id} className={`bg-white dark:bg-slate-900 rounded-xl p-3 border ${job.enabled ? 'border-gray-200 dark:border-slate-800' : 'border-gray-100 dark:border-slate-900 opacity-60'}`}>
+                    <div key={job.job_id} className="rounded-xl p-3" style={{ backgroundColor: "var(--bg-card)", opacity: job.enabled ? 1 : 0.6 }}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${job.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
+                            <div className={`w-2 h-2 rounded-full ${job.enabled ? 'bg-[#7A8B6F] animate-pulse' : 'bg-[var(--text-muted)]'}`} />
                             <span className="text-sm font-medium truncate">{job.name}</span>
                           </div>
                           <div className="flex items-center gap-2 mt-1 ml-4">
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 font-mono">{typeof job.schedule === 'object' ? job.schedule.display || job.schedule.expr : job.schedule}</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: "var(--bg)", color: "var(--text-muted)" }}>{typeof job.schedule === 'object' ? job.schedule.display || job.schedule.expr : job.schedule}</span>
                             {job.deliver && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">{job.deliver}</span>
+                              <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: "var(--accent-soft)", color: "var(--accent)" }}>{job.deliver}</span>
                             )}
                           </div>
                           {job.last_run_at && (
-                            <div className="text-[10px] text-gray-400 dark:text-slate-600 mt-1 ml-4">
+                            <div className="text-[10px] mt-1 ml-4" style={{ color: "var(--text-muted)" }}>
                               Last: {new Date(job.last_run_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                               {job.last_status && (
-                                <span className={`ml-1 ${job.last_status === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{job.last_status}</span>
+                                <span className="ml-1" style={{ color: job.last_status === 'ok' ? '#7A8B6F' : '#B94646' }}>{job.last_status}</span>
                               )}
                             </div>
                           )}
                         </div>
                         {job.no_agent && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 flex-shrink-0">script</span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded flex-shrink-0" style={{ backgroundColor: "var(--accent-soft)", color: "var(--accent)" }}>script</span>
                         )}
                       </div>
                     </div>
@@ -979,16 +925,16 @@ export default function Dashboard() {
       </main>
 
       {/* ── Bottom Nav ── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-gray-200 dark:border-slate-800" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+      <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl" style={{ backgroundColor: "color-mix(in srgb, var(--bg) 90%, transparent)", borderTop: "1px solid var(--border)", paddingBottom: "env(safe-area-inset-bottom)" }}>
         <div className="max-w-lg mx-auto overflow-x-auto scrollbar-hide">
           <div className="flex min-w-max justify-around px-2">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex flex-col items-center gap-0.5 py-2 pt-3 px-2 transition-colors min-w-[52px] ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-400 dark:text-slate-600"}`}>
-                  <HeroIconMulti paths={tab.icon} className={`w-5 h-5 ${isActive ? "text-indigo-600 dark:text-indigo-400" : ""}`} />
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex flex-col items-center gap-0.5 py-2 pt-3 px-2 transition-colors min-w-[52px]" style={{ color: isActive ? "var(--accent)" : "var(--text-muted)" }}>
+                  <HeroIconMulti paths={tab.icon} className="w-5 h-5" />
                   <span className="text-[9px] font-medium">{tab.label}</span>
-                  {isActive && <div className="w-1 h-1 rounded-full bg-indigo-600 dark:bg-indigo-400 mt-0.5" />}
+                  {isActive && <div className="w-1 h-1 rounded-full mt-0.5" style={{ backgroundColor: "var(--accent)" }} />}
                 </button>
               );
             })}

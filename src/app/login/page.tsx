@@ -38,56 +38,56 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: "var(--bg)" }}>
       {/* Ambient background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-indigo-500/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-1/4 w-[600px] h-[400px] bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full blur-3xl" style={{ backgroundColor: "rgba(196,149,106,0.06)" }} />
+        <div className="absolute bottom-0 left-1/4 w-[600px] h-[400px] rounded-full blur-3xl" style={{ backgroundColor: "rgba(122,139,111,0.04)" }} />
       </div>
-
-      {/* Grid pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
       <div className="relative z-10 w-full max-w-md px-6">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 mb-4">
-            <span className="text-3xl">⚡</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ backgroundColor: "var(--accent-soft)", border: "1px solid var(--border)" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8" style={{ color: "var(--accent)" }}>
+              <path d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z" />
+            </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-gradient">PIXZ TRACKER</h1>
-          <p className="text-slate-500 mt-2 text-sm">Autonomous Revenue Agent Dashboard</p>
+          <h1 className="text-3xl font-extrabold" style={{ color: "var(--text)" }}>PIXZ TRACKER</h1>
+          <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>Autonomous Revenue Agent Dashboard</p>
         </div>
 
         {/* Login Form */}
-        <div className="card p-8">
+        <div className="rounded-2xl p-8" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Username</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>Username</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="input"
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                style={{ backgroundColor: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
                 placeholder="Enter username"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input"
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                style={{ backgroundColor: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
                 placeholder="Enter password"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm flex items-center gap-2">
+              <div className="rounded-xl px-4 py-3 text-sm flex items-center gap-2" style={{ backgroundColor: "rgba(185,70,70,0.1)", border: "1px solid rgba(185,70,70,0.2)", color: "#D4735E" }}>
                 <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
@@ -116,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-slate-600 text-xs mt-6">
+        <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)" }}>
           Secured with JWT · MongoDB Atlas
         </p>
       </div>
